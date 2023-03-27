@@ -10,6 +10,5 @@ na quarta tela temos icones clicáveis. clicando em algum desses icones você co
 
 na quinta tela é onde criamos uma review. o usuário pode buscar pelo jogo no qual vai criar a review, dar nota baseada em estrelas de 0 a 5 e dar fazer uma breve resenha, utilizamos o método get e o método post.
 
-na última tela temos acesso ao perfil do usuário. nela utilizamos apenas o método get. o usuário consegue ver quantas reviews realizou, amigos no app e quantas resenhas postou.
-
+na última tela temos acesso ao perfil do usuário. nela utilizamos apenas o método get. o usuário consegue ver quantas reviews realizou, amigos no app e quantas resenhas postou..
 
