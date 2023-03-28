@@ -3,6 +3,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Game {
+
+    private Long id;
     private BigDecimal valorJogo;
     private LocalDate dataLancamento;
     private String descricaoJogo;
@@ -13,6 +15,14 @@ public class Game {
         this.dataLancamento = dataLancamento;
         this.descricaoJogo = descricaoJogo;
         this.nomeJogo = nomeJogo;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public BigDecimal getValorJogo() {
