@@ -16,13 +16,11 @@ public class GameController {
         var jogo = new Game(
                     new BigDecimal(100), 
                     LocalDate.now(), 
-                    "cinema",
+                     "cinema",
                     "shutup"
                 );
 
         return jogo;
     }
-
-
 
 }
