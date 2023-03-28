@@ -1,10 +1,20 @@
 package com.rankdat.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Review {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String tituloReview;
     private String descricaoReview;
+
+    protected Review() {}
 
     public Review(Long id, String tituloReview, String descricaoReview) {
         this.id = id;

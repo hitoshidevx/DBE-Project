@@ -2,13 +2,23 @@ package com.rankdat.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Game {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal valorJogo;
     private LocalDate dataLancamento;
     private String descricaoJogo;
     private String nomeJogo;
+
+    protected Game() {}
 
     public Game(BigDecimal valorJogo, LocalDate dataLancamento, String descricaoJogo, String nomeJogo) {
         this.valorJogo = valorJogo;

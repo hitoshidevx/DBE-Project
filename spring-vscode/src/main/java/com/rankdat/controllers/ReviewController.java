@@ -1,11 +1,10 @@
 package com.rankdat.controllers;
 
 import java.util.List;
-import java.util.ArrayList;
 
-import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,68 +13,72 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rankdat.models.Review;
+import com.rankdat.repository.ReviewRepository;
 
 @RestController
+@RequestMapping("/api/reviews")
 public class ReviewController {
 
     Logger log = LoggerFactory.getLogger(ReviewController.class);
 
-    List<Review> reviews = new ArrayList<>();
+    @Autowired
+    ReviewRepository repository;
 
-    @GetMapping("/api/reviews")
+    @GetMapping
     public List<Review> getAllReviews() {
-        return reviews;
+        return repository.findAll();
     }
 
-    @GetMapping("/api/review/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Review> getReviewId(@PathVariable Long id) {
         log.info("buscando uma review com id: " + id);
-        var reviewEncontrada = reviews.stream().filter(r -> r.getId().equals(id)).findFirst();
+        var reviewEncontrada = repository.findById(id);
 
         if(reviewEncontrada.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         
         return ResponseEntity.ok(reviewEncontrada.get());
 
     }
 
-    @PostMapping("/api/review")
+    @PostMapping
     public ResponseEntity<Review> postReview(@RequestBody Review review) {
         log.info("cadastrando uma review: " + review);
 
-        review.setId(reviews.size() + 1l);
-        reviews.add(review);
+        repository.save(review);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 
-    @DeleteMapping("/api/review/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Review> deleteReview(@PathVariable Long id) {
         log.info("excluindo uma review com id: " + id);
-        var reviewEncontrada = reviews.stream().filter(r -> r.getId().equals(id)).findFirst();
+        var reviewEncontrada = repository.findById(id);
         
         if(reviewEncontrada.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         
-        reviews.remove(reviewEncontrada.get());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        repository.delete(reviewEncontrada.get());
+
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/api/review/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Review> putReview(@PathVariable Long id, @RequestBody Review review) {
         log.info("alterando uma review com id: " + id);
-        var reviewEncontrada = reviews.stream().filter(r -> r.getId().equals(id)).findFirst();
+        var reviewEncontrada = repository.findById(id);
 
         if(reviewEncontrada.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
 
-        reviews.remove(reviewEncontrada.get());
+        
         review.setId(id);
-        reviews.add(review);
+        repository.save(review);
 
         return ResponseEntity.ok(review);
 
