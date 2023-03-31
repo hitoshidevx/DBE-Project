@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rankdat.exceptions.RestNotFoundException;
 import com.rankdat.models.Game;
 import com.rankdat.repository.GameRepository;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<Game> createGame(@RequestBody Game jogo) {
+    public ResponseEntity<Object> createGame(@RequestBody  @Valid Game jogo) {
         log.info("cadastrando jogo: " + jogo);
 
         repository.save(jogo);
@@ -47,36 +50,26 @@ public class GameController {
     public ResponseEntity<Game> getGame(@PathVariable Long id) {
         log.info("buscando por jogo com id: " + id);
 
-        var jogoEncontrado = repository.findById(id);
+        var jogoEncontrado = repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
 
-        if(jogoEncontrado.isEmpty()) 
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(jogoEncontrado.get());
+        return ResponseEntity.ok(jogoEncontrado);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Game> deleteGame(@PathVariable Long id) {
         log.info("deletando jogo com id: " + id);
-        var jogoEncontrado = repository.findById(id);
 
-        if(jogoEncontrado.isEmpty())
-            return ResponseEntity.notFound().build();
-
+        var jogoEncontrado = repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
         
-        repository.delete(jogoEncontrado.get());
+        repository.delete(jogoEncontrado);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Game> putGame(@PathVariable Long id, @RequestBody Game jogo) {
+    public ResponseEntity<Object> putGame(@PathVariable Long id, @RequestBody @Valid Game jogo) {
         log.info("alterando jogo com id: " + id);
-        var jogoEncontrado = repository.findById(id);
-
-        if(jogoEncontrado.isEmpty())
-            return ResponseEntity.notFound().build();
-
+        repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
         
         jogo.setId(id);
 
