@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rankdat.models.Review;
 import com.rankdat.repository.ReviewRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
@@ -46,7 +48,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> postReview(@RequestBody Review review) {
+    public ResponseEntity<Review> postReview(@RequestBody @Valid Review review) {
         log.info("cadastrando uma review: " + review);
 
         repository.save(review);
@@ -69,7 +71,7 @@ public class ReviewController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Review> putReview(@PathVariable Long id, @RequestBody Review review) {
+    public ResponseEntity<Review> putReview(@PathVariable Long id, @RequestBody @Valid Review review) {
         log.info("alterando uma review com id: " + id);
         var reviewEncontrada = repository.findById(id);
 
