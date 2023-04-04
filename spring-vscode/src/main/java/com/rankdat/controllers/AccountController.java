@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rankdat.exceptions.RestNotFoundException;
 import com.rankdat.models.Account;
-import com.rankdat.models.Game;
 import com.rankdat.repository.AccountRepository;
-import com.rankdat.repository.GameRepository;
 
 import jakarta.validation.Valid;
 
