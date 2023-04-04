@@ -14,16 +14,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Review {
-
+public class Account {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank @Size(min=5, max=50)
-    private String tituloReview;
     
-    @NotBlank @Size(min=5, max=255)
-    private String descricaoReview;
+    @NotBlank
+    @Size(min = 5, max = 30)
+    private String nomeConta;
+
+    @NotBlank
+    @Size(min = 5, max = 40)
+    private String descricaoConta;
+
+    @NotBlank
+    private String iconeConta;
 
 }
