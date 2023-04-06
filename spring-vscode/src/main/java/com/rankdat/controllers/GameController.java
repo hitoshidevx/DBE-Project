@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rankdat.exceptions.RestNotFoundException;
 import com.rankdat.models.Game;
+import com.rankdat.repository.AccountRepository;
 import com.rankdat.repository.GameRepository;
 
 import jakarta.validation.Valid;
@@ -30,18 +31,22 @@ public class GameController {
     Logger log = LoggerFactory.getLogger(GameController.class);
 
     @Autowired // Princípio da Injeção de Dependência (> Pesquisar mais Sobre! <)
-    GameRepository repository;
+    GameRepository jogoRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @GetMapping
     public List<Game> returnGames() {
-        return repository.findAll();
+        return jogoRepository.findAll();
     }
 
     @PostMapping
     public ResponseEntity<Object> createGame(@RequestBody  @Valid Game jogo) {
         log.info("cadastrando jogo: " + jogo);
 
-        repository.save(jogo);
+        jogoRepository.save(jogo);
+        jogo.setAccount(accountRepository.findById(jogo.getAccount().getId()).get());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(jogo);
     }
@@ -50,7 +55,7 @@ public class GameController {
     public ResponseEntity<Game> getGame(@PathVariable Long id) {
         log.info("buscando por jogo com id: " + id);
 
-        var jogoEncontrado = repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
+        var jogoEncontrado = jogoRepository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
 
         return ResponseEntity.ok(jogoEncontrado);
     }
@@ -59,9 +64,9 @@ public class GameController {
     public ResponseEntity<Game> deleteGame(@PathVariable Long id) {
         log.info("deletando jogo com id: " + id);
 
-        var jogoEncontrado = repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
+        var jogoEncontrado = jogoRepository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
         
-        repository.delete(jogoEncontrado);
+        jogoRepository.delete(jogoEncontrado);
 
         return ResponseEntity.noContent().build();
     }
@@ -69,11 +74,11 @@ public class GameController {
     @PutMapping("{id}")
     public ResponseEntity<Object> putGame(@PathVariable Long id, @RequestBody @Valid Game jogo) {
         log.info("alterando jogo com id: " + id);
-        repository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
+        jogoRepository.findById(id).orElseThrow(() -> new RestNotFoundException("O jogo não foi encontrado"));
         
         jogo.setId(id);
 
-        repository.save(jogo);
+        jogoRepository.save(jogo);
 
         return ResponseEntity.ok(jogo);
 

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.rankdat.exceptions.RestNotFoundException;
 import com.rankdat.models.Account;
 import com.rankdat.repository.AccountRepository;
 
@@ -76,7 +76,7 @@ public class AccountController {
     }
 
     private Account getAccountId(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RestNotFoundException("A conta não foi encontrada"));
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "A conta não foi encontrada"));
     }
 
 }

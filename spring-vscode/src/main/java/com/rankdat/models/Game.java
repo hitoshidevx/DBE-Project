@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,5 +38,10 @@ public class Game {
     @NotBlank(message = "O nome do jogo não pode estar vazio.")
     @Size(min = 5, max = 50)
     private String nomeJogo;
+
+    // Muitos jogos para UMA conta
+    @NotNull
+    @ManyToOne
+    private Account account;
 
 }
