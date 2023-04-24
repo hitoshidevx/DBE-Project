@@ -1,9 +1,9 @@
 package com.rankdat.controllers;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rankdat.exceptions.RestNotFoundException;
@@ -21,14 +22,12 @@ import com.rankdat.repository.AccountRepository;
 import com.rankdat.repository.GameRepository;
 
 import jakarta.validation.Valid;
-
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/jogos")
 public class GameController {
-
-    Logger log = LoggerFactory.getLogger(GameController.class);
 
     @Autowired // Princípio da Injeção de Dependência (> Pesquisar mais Sobre! <)
     GameRepository jogoRepository;
@@ -37,8 +36,9 @@ public class GameController {
     AccountRepository accountRepository;
 
     @GetMapping
-    public List<Game> returnGames() {
-        return jogoRepository.findAll();
+    public Page<Game> index(@RequestParam(required = false) String descricao, @PageableDefault(size = 5) Pageable pageable){
+        if (descricao == null) return jogoRepository.findAll(pageable);
+        return jogoRepository.findByDescricaoContaining(descricao, pageable);
     }
 
     @PostMapping
