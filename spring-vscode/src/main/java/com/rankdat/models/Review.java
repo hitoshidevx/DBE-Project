@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,10 +28,5 @@ public class Review {
     
     @NotBlank @Size(min=5, max=255)
     private String descricaoReview;
-
-    // Muitas reviews para uma conta
-    @NotNull
-    @ManyToOne
-    private Account account;
 
 }

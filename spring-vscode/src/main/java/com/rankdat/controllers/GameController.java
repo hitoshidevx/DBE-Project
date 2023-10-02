@@ -24,6 +24,8 @@ import com.rankdat.repository.GameRepository;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequestMapping("/api/jogos")
@@ -35,12 +37,6 @@ public class GameController {
     @Autowired
     AccountRepository accountRepository;
 
-    @GetMapping
-    public Page<Game> index(@RequestParam(required = false) String descricao, @PageableDefault(size = 5) Pageable pageable){
-        if (descricao == null) return jogoRepository.findAll(pageable);
-        return jogoRepository.findByDescricaoContaining(descricao, pageable);
-    }
-
     @PostMapping
     public ResponseEntity<Object> createGame(@RequestBody  @Valid Game jogo) {
         log.info("cadastrando jogo: " + jogo);
@@ -49,6 +45,11 @@ public class GameController {
         jogo.setAccount(accountRepository.findById(jogo.getAccount().getId()).get());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(jogo);
+    }
+
+    @GetMapping
+    public List<Game> getAllGames() {
+        return jogoRepository.findAll();
     }
 
     @GetMapping("{id}")
